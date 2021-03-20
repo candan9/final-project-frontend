@@ -3,23 +3,28 @@ import { HttpClient } from '@angular/common/http';
 import { Observable} from 'rxjs';
 import { ListResponseModel } from '../models/listResponseModel';
 import { Product } from '../models/product';
+import { ActivatedRoute } from '@angular/router';
+import { typeWithParameters } from '@angular/compiler/src/render3/util';
+import { ResponseModel } from '../models/responseModel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  apiUrl = 'https://localhost:44358/api/products/getall';
-  constructor(private httpClient: HttpClient) { }
+  apiUrl = 'https://localhost:44358/api/';
+  constructor(private httpClient: HttpClient,private activatedRoute:ActivatedRoute) { }
 
   getProducts():Observable<ListResponseModel<Product>> {
-    let newPath= this.apiUrl+ "products/getall"
+    let newPath= this.apiUrl + "products/getall"
     return this.httpClient
       .get<ListResponseModel<Product>>(newPath);
   }
-  getProductsByCategory(categoryId:Number):Observable<ListResponseModel<Product>> {
-    let newPath= this.apiUrl+ "products/getbycategory/?categorId="+categoryId;
+  getProductsByCategory(categoryId:number):Observable<ListResponseModel<Product>> {
+    let newPath= this.apiUrl+ "products/getbycategory?categoryId="+categoryId
     return this.httpClient
-      .get<ListResponseModel<Product>>(newPath);
-     
+      .get<ListResponseModel<Product>>(newPath);  
+  }
+  add(product:Product):Observable<ResponseModel>{
+    return this.httpClient.post<ResponseModel>(this.apiUrl+"products/add",product);
   }
 }
